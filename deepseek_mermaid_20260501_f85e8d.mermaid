@@ -1,0 +1,50 @@
+flowchart TD
+    subgraph S0 [🧑‍💻 人工设置 - 仅在首次使用或接入新项目时执行一次]
+        direction TB
+        H1[📥 将三个 command 文件放入项目<br/>frontend-standard.md<br/>translate-requirement.md<br/>naming-convention.md]
+        H2{项目是否已有<br/>naming-convention.md?}
+        H2 -- 无（新项目） --> H3[📄 保留 naming-convention.md 为空或使用模板]
+        H2 -- 有（存量项目） --> H4[📂 已有该文件，跳过]
+        H3 --> H5[✅ 设置完成]
+        H4 --> H5
+    end
+
+    H5 --> S1
+
+    subgraph S1 [🗣️ 对话窗口 A - 需求精炼]
+        direction TB
+        A1[👤 人类：输入 /translate-requirement]
+        A2[👤 人类：发送模糊需求<br/>如“加个点赞功能”]
+        A2 --> A3[🤖 AI：加载项目上下文<br/>types.ts / mock-api-doc.md / naming-convention.md]
+        A3 --> A4[🤖 AI：追问三原则<br/>假设反面 / 数据关联 / 类比建议]
+        A4 --> A5{人类说“可以了”?}
+        A5 -- 否 --> A4
+        A5 -- 是 --> A6[🤖 AI：生成契约提案<br/>基于 naming-convention.md 推导命名并查重]
+        A6 --> A7{人类确认命名?}
+        A7 -- 修改 --> A6
+        A7 -- 确认 --> A8[🤖 AI：输出结构化需求说明]
+    end
+
+    A8 --> S2
+
+    subgraph S2 [⚙️ 对话窗口 B - 契约驱动全栈执行]
+        direction TB
+        B1[👤 人类：将需求说明粘贴到新对话窗口<br/>输入 /frontend-standard]
+        B1 --> B2[步骤1: 生成 / 更新 types.ts]
+        B2 --> B3{项目是否已有<br/>naming-convention.md?}
+        B3 -- 否 --> B4[🆕 首次生成 naming-convention.md]
+        B3 -- 是 --> B5[📝 同步更新 naming-convention.md]
+        B4 --> B6[步骤2: 生成 api-contract.ts<br/>遵循命名规范并查重端点]
+        B5 --> B6
+        B6 --> B7[步骤3: 服务层 services.ts]
+        B7 --> B8[步骤4-5: Mock 环境搭建]
+        B8 --> B9[步骤6-8: 组件原子化开发]
+        B9 --> B10[步骤9-10: 路由契约清算]
+        B10 --> B11[步骤11: 组件交叉校验<br/>含命名风格一致性检查]
+        B11 --> B12[步骤12-13: 双模冒烟测试]
+        B12 --> B13[步骤14: 生成或覆盖更新全局 mock-api-doc.md]
+        B13 --> B14[🔍 最终自检<br/>模糊表述 / 重复段落 / 命名规范同步确认]
+        B14 --> B15[📊 输出复盘日志<br/>追加至 mock-api-doc.md]
+    end
+
+    B15 --> DONE[🎉 交付物就绪]
