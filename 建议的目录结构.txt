@@ -1,0 +1,22 @@
+项目根目录/
+├── blog-frontend/          ← 前端项目（已有）
+│   ├── .claude/
+│   ├── src/
+│   ├── mock-api-doc.md
+│   ├── naming-convention.md
+│   └── ...
+├── backend/                ← 🆕 新建后端项目
+│   ├── .claude/            ← 后端 command 文件存放于此（如有需要）
+│   ├── app/
+│   │   ├── models/         ← ORM 模型（步骤2产出）
+│   │   ├── schemas/        ← Pydantic 校验模型（步骤3产出）
+│   │   ├── routers/        ← API 路由（步骤4产出）
+│   │   ├── services/       ← 业务逻辑（步骤5产出）
+│   │   └── core/           ← 配置、安全、数据库连接
+│   ├── tests/              ← 接口测试套件（步骤7产出）
+│   ├── migrations/         ← 数据库迁移脚本
+│   ├── backend-feasibility.md   ← 后端评估报告
+│   ├── BACKEND_DELIVERY_LOG.md  ← 后端交付日志
+│   ├── requirements.txt    ← Python 依赖
+│   └── README.md           ← 后端项目说明
+└── naming-convention.md    ← 共享命名规范（前后端共用）

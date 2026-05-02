@@ -1,0 +1,79 @@
+flowchart TD
+    subgraph S0 [🧑‍💻 人工设置]
+        direction TB
+        H1[📥 放入四个 command 文件<br/>frontend-standard.md<br/>translate-requirement.md<br/>naming-convention.md<br/>backend-standard.md]
+        H2{项目是否已有<br/>naming-convention.md?}
+        H2 -- 无 --> H3[📄 保留命名规范为空或使用模板]
+        H2 -- 有 --> H4[📂 已有，跳过]
+        H3 --> H5[✅ 设置完成]
+        H4 --> H5
+    end
+
+    H5 --> S1
+
+    subgraph S1 [🗣️ 对话窗口 A - 需求精炼]
+        direction TB
+        A1[👤 人类：输入 /translate-requirement]
+        A2[👤 人类：发送模糊需求]
+        A2 --> A3[🤖 AI：加载项目上下文<br/>types.ts / mock-api-doc.md<br/>naming-convention.md]
+        A3 --> A0_1[🔍 步骤0 前置检查：工作目录存在]
+        A0_1 --> A4[🤖 AI：追问三原则]
+        A4 --> A5{人类说“可以了”?}
+        A5 -- 否 --> A4
+        A5 -- 是 --> A6[🤖 AI：生成契约提案]
+        A6 --> A7{人类确认命名?}
+        A7 -- 修改 --> A6
+        A7 -- 确认 --> A8[📄 输出：功能需求说明<br/>仅描述数据模型 / API / 交互流程]
+    end
+
+    A8 --> S2_FRONT
+
+    subgraph S2_FRONT [⚙️ 对话窗口 B - 前端执行]
+        direction TB
+        B1[👤 人类：输入 /frontend-standard<br/>粘贴功能需求说明]
+        B1 --> B0[🔍 步骤0 前置检查：功能需求说明存在]
+        B0 --> B2[步骤1: 生成 / 更新 types.ts]
+        B2 --> B3[步骤2: 生成 api-contract.ts]
+        B3 --> B4_1[步骤4: 生成临时 Mock Handlers<br/>（基于 types + api-contract）]
+        B4_1 --> B4_2[步骤5-13: 服务层 / Mock 配置 / 组件 / 路由 / 测试]
+        B4_2 --> B5_1[步骤14: 生成或覆盖更新 mock-api-doc.md]
+        B5_1 --> B5_2[步骤14.5: 基于文档重新生成 handlers<br/>并重新执行受影响的步骤11-13]
+        B5_2 --> B6[📊 前端复盘日志<br/>（追加到 mock-api-doc.md）]
+    end
+
+    B6 --> FRONT_DELIVER[📦 前端交付物就绪<br/>types.ts + api-contract.ts + mock-api-doc.md]
+
+    FRONT_DELIVER --> S2_BACK_ASSESS
+
+    subgraph S2_BACK_ASSESS [🔍 后端评估 - 可独立对话窗口]
+        direction TB
+        D1[👤 后端：输入 /backend-assess<br/>粘贴功能需求说明]
+        D1 --> D0[🔍 步骤0 前置检查：功能需求说明 + 前端交付物存在]
+        D0 --> D2[🤖 AI：读取功能需求说明]
+        D2 --> D3[🤖 AI：读取前端交付物<br/>types.ts / api-contract.ts / mock-api-doc.md]
+        D3 --> D4[🤖 AI：分析项目现状<br/>已有数据库结构 / 已有后端代码<br/>（若 backend/ 为空则标记无历史）]
+        D4 --> D5[📄 生成 backend-feasibility.md]
+        D5 --> D6{后端审阅评估报告<br/>是否有技术障碍?}
+        D6 -- 需要驳回 --> D7[📝 生成 REJECT_FEEDBACK.md<br/>提出修改意见，反馈给需求方]
+        D7 --> S1
+        D6 -- 可以实施 --> D8[✅ 签字确认]
+    end
+
+    D8 --> S2_BACK_IMPL
+
+    subgraph S2_BACK_IMPL [⚙️ 对话窗口 D - 后端执行]
+        direction TB
+        E1[👤 后端：输入 /backend-standard<br/>粘贴功能需求说明]
+        E1 --> E0[🔍 步骤0 前置检查：功能需求说明 + 前端交付物<br/>+ backend-feasibility.md 已存在且可实施]
+        E0 --> E2[🤖 AI：读取前端交付物<br/>types.ts / api-contract.ts / mock-api-doc.md]
+        E2 --> E3[🤖 AI：读取评估报告<br/>backend-feasibility.md]
+        E3 --> E4[步骤2: 生成数据库模型]
+        E4 --> E5[步骤3: 生成校验模型]
+        E5 --> E6[步骤4: 实现 API 路由]
+        E6 --> E7[步骤5: 实现业务逻辑]
+        E7 --> E8[步骤6: 安全铁律自检]
+        E8 --> E9[步骤7: 后端接口测试<br/>（动态 UUID，多数据库支持）]
+        E9 --> E10[步骤8: 📊 后端复盘日志<br/>写入 BACKEND_DELIVERY_LOG.md]
+    end
+
+    E10 --> DONE[🎉 全栈交付物就绪]
