@@ -2,6 +2,8 @@
 
 **Contract-driven AI development workflow for full-stack projects.**
 
+English | [中文](./README_CN.md)
+
 ## Why does this exist?
 
 **Q: Before VibeGuard, how were you using AI to build projects?**
